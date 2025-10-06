@@ -1,0 +1,116 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ============================================
+# SENSITIVE DATA & CREDENTIALS (REMOVE BEFORE COMMITTING) 
+# ============================================
+
+# Local configuration files
+android/local.properties
+android/key.properties
+ios/Flutter/Flutter.podspec
+
+# Environment variables & API keys
+.env
+.env.local
+.env.production
+.env.development
+lib/config/api_config.dart
+
+# Secure storage & credentials
+*.jks
+*.keystore
+*.p12
+*.key
+*.pem
+credentials.json
+google-services.json
+GoogleService-Info.plist
+
+# Database & logs
+*.db
+*.sqlite
+*.sqlite3
+
+# Build artifacts
+*.apk
+*.aab
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Coverage & test reports
+coverage/
+test/.test_coverage.dart
+lcov.info
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.gr.dart
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*~
+
+# Firebase
+firebase_app_id_file.json
+.firebase/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
+
+# Web specific
+.fvm/
+
+# Error logs (contains sensitive crash data)
+hs_err_pid*.log
+replay_pid*.log
+flutter_*.log
