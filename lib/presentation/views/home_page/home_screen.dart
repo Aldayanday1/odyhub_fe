@@ -141,23 +141,26 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    // Get safe area padding for full screen display
+    final topPadding = MediaQuery.of(context).padding.top;
+    
     return Stack(
       children: [
         Scaffold(
           backgroundColor: const Color(0xFFF8F9FA),
           body: RefreshIndicator(
             onRefresh: _refreshData,
-            child: SafeArea(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: kHorizontalPadding),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: kVerticalSmall),
-
-                      // ------------------- MODERN HEADER CARD -------------------
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: kHorizontalPadding,
+                right: kHorizontalPadding,
+                top: topPadding + kVerticalSmall, // Status bar + small spacing
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ------------------- MODERN HEADER CARD -------------------
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -619,7 +622,7 @@ class _HomeViewState extends State<HomeView> {
           // ------------------- FLOATING BUTTON -------------------
 
           // floatingActionButton managed by MainNavigationScreen
-        ),
+        
       ],
     );
   }

@@ -139,13 +139,16 @@ class _WelcomePageState extends State<WelcomePage>
                 300, 300, const [Color(0xFFF1C6FF), Color(0xFFB08CFF)], 0.12),
           ),
 
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  const SizedBox(height: 14),
-                  // subtle header row
+          // Full screen content
+          Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: MediaQuery.of(context).padding.top + 14,
+            ),
+            child: Column(
+              children: [
+                // subtle header row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -314,7 +317,6 @@ class _WelcomePageState extends State<WelcomePage>
                 ],
               ),
             ),
-          ),
         ],
       ),
     );

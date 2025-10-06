@@ -48,16 +48,15 @@ class _DetailViewState extends State<DetailView> {
 
     return Scaffold(
       backgroundColor: kBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // HERO
-              SizedBox(
-                height: 300,
-                child: Stack(
-                  clipBehavior: Clip.none,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // HERO with full screen support
+            SizedBox(
+              height: 300 + MediaQuery.of(context).padding.top,
+              child: Stack(
+                clipBehavior: Clip.none,
                   children: [
                     Hero(
                       tag: 'unique_tag_1${widget.pengaduan.id}',
@@ -447,7 +446,6 @@ class _DetailViewState extends State<DetailView> {
             ],
           ),
         ),
-      ),
     );
   }
 }

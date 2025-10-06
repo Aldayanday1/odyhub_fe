@@ -220,20 +220,22 @@ class _EditPengaduanState extends State<EditPengaduan> {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
+    
     return Scaffold(
       backgroundColor: kBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // HERO / HEADER (refactored)
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // Background image with gentle overlay
-                  Container(
-                    height: 250,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // HERO / HEADER (refactored) - Full screen
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Background image with gentle overlay
+                Container(
+                  height: 250 + topPadding,
+                  padding: EdgeInsets.only(top: topPadding),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.vertical(
@@ -974,7 +976,6 @@ class _EditPengaduanState extends State<EditPengaduan> {
             ],
           ),
         ),
-      ),
     );
   }
 }
