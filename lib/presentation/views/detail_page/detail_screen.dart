@@ -100,7 +100,7 @@ class _DetailViewState extends State<DetailView> {
 
                   // Back button
                   Positioned(
-                    top: 18,
+                    top: 50,
                     left: 16,
                     child: Material(
                       color: Colors.transparent,
@@ -127,7 +127,7 @@ class _DetailViewState extends State<DetailView> {
                   Positioned(
                     left: kHorizontalPadding,
                     right: kHorizontalPadding,
-                    bottom: -28,
+                    bottom: 10,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 14),

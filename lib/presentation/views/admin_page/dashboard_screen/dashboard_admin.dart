@@ -120,33 +120,68 @@ class _HomeViewState extends State<DashboardAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: kBackground,
-          body: RefreshIndicator(
-            onRefresh: _refreshData,
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kHorizontalPadding,
-                    vertical: 16,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ------------------- HEADER -------------------
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 4,
+    return Stack(children: [
+      Scaffold(
+        backgroundColor: kBackground,
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: kHorizontalPadding,
+                right: kHorizontalPadding,
+                top: MediaQuery.of(context).padding.top + 16,
+                bottom: 16,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ------------------- HEADER -------------------
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 4,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Menu icon in modern container
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.dashboard_outlined,
+                            color: kAccentPrimary,
+                            size: 22,
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Menu icon in modern container
-                            Container(
+                        // Title
+                        Text(
+                          "Dashboard Admin",
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: kDarkGrey,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        // Logout button
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: _showLogoutConfirmationDialog,
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -160,236 +195,191 @@ class _HomeViewState extends State<DashboardAdmin> {
                                 ],
                               ),
                               child: Icon(
-                                Icons.dashboard_outlined,
-                                color: kAccentPrimary,
+                                Icons.logout_outlined,
+                                color: kMediumGrey,
                                 size: 22,
                               ),
                             ),
-                            // Title
-                            Text(
-                              "Dashboard Admin",
-                              style: GoogleFonts.poppins(
-                                fontSize: 20,
-                                color: kDarkGrey,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.3,
-                              ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Search widget
+                  SearchWidget(),
+                  const SizedBox(
+                      height:
+                          kVerticalSection), // // -------------------- SLIDE CARDS --------------------
+
+                  // AutoSlideCardsAdmin(pengaduanList: _allPengaduan ?? []),
+
+                  // ------------------- TOTAL PENGADUAN -------------------
+                  FutureBuilder<List<Pengaduan>>(
+                    future: _controller.getAllPengaduan(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SkeletonTotalCount();
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (snapshot.hasData) {
+                        final totalPengaduan = snapshot.data!.length;
+                        return Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [kAccentPrimary, kAccentSecondary],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                            // Logout button
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: _showLogoutConfirmationDialog,
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.04),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    Icons.logout_outlined,
-                                    color: kMediumGrey,
-                                    size: 22,
-                                  ),
+                            borderRadius: BorderRadius.circular(kBorderRadius),
+                            boxShadow: [
+                              BoxShadow(
+                                color: kAccentPrimary.withOpacity(0.3),
+                                blurRadius: 16,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.assessment_outlined,
+                                  color: Colors.white,
+                                  size: 32,
                                 ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Total Pengaduan',
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 13,
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontWeight: FontWeight.w400,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      '$totalPengaduan',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 36,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: kVerticalSection),
+
+                  // ------------------- ANIMATED GRAPH -------------------
+                  PengaduanChart(
+                    futurePengaduanGraph: futurePengaduanGraph,
+                  ),
+                  const SizedBox(height: kVerticalSection),
+
+                  // ------------------------  STATUS CATEGORY ------------------------
+                  Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [kAccentPrimary, kAccentSecondary],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      // Search widget
-                      SearchWidget(),
-                      const SizedBox(
-                          height:
-                              kVerticalSection), // // -------------------- SLIDE CARDS --------------------
-
-                      // AutoSlideCardsAdmin(pengaduanList: _allPengaduan ?? []),
-
-                      // ------------------- TOTAL PENGADUAN -------------------
-                      FutureBuilder<List<Pengaduan>>(
-                        future: _controller.getAllPengaduan(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SkeletonTotalCount();
-                          } else if (snapshot.hasError) {
-                            return Center(
-                                child: Text('Error: ${snapshot.error}'));
-                          } else if (snapshot.hasData) {
-                            final totalPengaduan = snapshot.data!.length;
-                            return Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [kAccentPrimary, kAccentSecondary],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius:
-                                    BorderRadius.circular(kBorderRadius),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: kAccentPrimary.withOpacity(0.3),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Icon(
-                                      Icons.assessment_outlined,
-                                      color: Colors.white,
-                                      size: 32,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Total Pengaduan',
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 13,
-                                            color:
-                                                Colors.white.withOpacity(0.9),
-                                            fontWeight: FontWeight.w400,
-                                            letterSpacing: 0.3,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          '$totalPengaduan',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 36,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                            height: 1.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
+                      const SizedBox(width: 12),
+                      Text(
+                        "Status Category",
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: kDarkGrey,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.2,
+                        ),
                       ),
-                      const SizedBox(height: kVerticalSection),
-
-                      // ------------------- ANIMATED GRAPH -------------------
-                      PengaduanChart(
-                        futurePengaduanGraph: futurePengaduanGraph,
-                      ),
-                      const SizedBox(height: kVerticalSection),
-
-                      // ------------------------  STATUS CATEGORY ------------------------
-                      Row(
-                        children: [
-                          Container(
-                            width: 4,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [kAccentPrimary, kAccentSecondary],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            "Status Category",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: kDarkGrey,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      PengaduanStatusCard(status: "PENDING"),
-                      const SizedBox(height: 12),
-                      PengaduanStatusCard(status: "PROGRESS"),
-                      const SizedBox(height: 12),
-                      PengaduanStatusCard(status: "DONE"),
-                      const SizedBox(height: kVerticalSection),
-
-                      // ------------------- LIST OF GRID -------------------
-                      Row(
-                        children: [
-                          Container(
-                            width: 4,
-                            height: 24,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [kAccentPrimary, kAccentSecondary],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            "List of Complaint",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: kDarkGrey,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      FutureBuilder<List<Pengaduan>>(
-                        future: _controller.getAllPengaduan(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SkeletonCategoryGrid();
-                          } else if (snapshot.hasError) {
-                            return Center(
-                                child: Text('Error: ${snapshot.error}'));
-                          } else {
-                            return CategoryGrid(
-                                pengaduanList: _allPengaduan ?? []);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 24),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  PengaduanStatusCard(status: "PENDING"),
+                  const SizedBox(height: 12),
+                  PengaduanStatusCard(status: "PROGRESS"),
+                  const SizedBox(height: 12),
+                  PengaduanStatusCard(status: "DONE"),
+                  const SizedBox(height: kVerticalSection),
+
+                  // ------------------- LIST OF GRID -------------------
+                  Row(
+                    children: [
+                      Container(
+                        width: 4,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [kAccentPrimary, kAccentSecondary],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        "List of Complaint",
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: kDarkGrey,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  FutureBuilder<List<Pengaduan>>(
+                    future: _controller.getAllPengaduan(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SkeletonCategoryGrid();
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        return CategoryGrid(pengaduanList: _allPengaduan ?? []);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
             ),
           ),
         ),
-      ],
-    );
+      ),
+    ]);
   }
 }
