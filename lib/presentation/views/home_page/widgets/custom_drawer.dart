@@ -220,13 +220,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget _buildUserHeader(UserProfile userProfile) {
     return Container(
-      height: 220,
-      padding: EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      height: 200,
+      padding: EdgeInsets.only(top: 35, left: 20, right: 20, bottom: 18),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Profile Image
+          // Profile Image on the left
           Container(
+            width: 50,
+            height: 50,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
@@ -235,9 +237,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withOpacity(0.25),
                   blurRadius: 10,
-                  offset: Offset(0, 5),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
@@ -247,32 +249,37 @@ class _CustomDrawerState extends State<CustomDrawer> {
               backgroundImage: NetworkImage(userProfile.profileImage),
             ),
           ),
-          SizedBox(height: 15),
 
-          // User Name
-          Text(
-            userProfile.nama,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(height: 5),
+          SizedBox(width: 16),
 
-          // User Email
-          Text(
-            userProfile.email,
-            style: GoogleFonts.roboto(
-              fontSize: 13,
-              color: Colors.white.withOpacity(0.9),
+          // Name and Email on the right
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userProfile.nama,
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 6),
+                Text(
+                  userProfile.email,
+                  style: GoogleFonts.roboto(
+                    fontSize: 13,
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

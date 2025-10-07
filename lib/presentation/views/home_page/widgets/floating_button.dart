@@ -174,6 +174,7 @@ class _FloatingButtonState extends State<FloatingButton> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FloatingActionButton(
+                    heroTag: 'main_fab',
                     onPressed: () => _onItemTapped(2),
                     backgroundColor: Colors.transparent,
                     elevation: 0,

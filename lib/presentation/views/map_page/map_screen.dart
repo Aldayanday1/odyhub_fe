@@ -75,6 +75,7 @@ class _MapScreenState extends State<MapScreen>
     var position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    if (!mounted) return;
     setState(() {
       _lastMapPosition = LatLng(position.latitude, position.longitude);
     });
@@ -182,10 +183,13 @@ class _MapScreenState extends State<MapScreen>
       setState(() {
         _searchResults = sortedResults.take(8).toList();
       });
+      if (!mounted) return;
     } catch (e) {
-      setState(() {
-        _searchResults = [];
-      });
+      if (mounted) {
+        setState(() {
+          _searchResults = [];
+        });
+      }
     }
   }
 
@@ -253,12 +257,14 @@ class _MapScreenState extends State<MapScreen>
   void _selectSearchResult(Map<String, dynamic> item) async {
     final Location location = item['location'] as Location;
     LatLng position = LatLng(location.latitude, location.longitude);
-    setState(() {
-      _lastMapPosition = position;
-      _searchResults = [];
-      _searchController.clear();
-      _lastAddress = item['label'] as String?;
-    });
+    if (mounted) {
+      setState(() {
+        _lastMapPosition = position;
+        _searchResults = [];
+        _searchController.clear();
+        _lastAddress = item['label'] as String?;
+      });
+    }
 
     _mapController?.move(position, 16.0);
     _updateSelectedLocation(position);
@@ -706,6 +712,7 @@ class _MapScreenState extends State<MapScreen>
       Placemark place = placemarks.first;
       String fullAddress =
           "${place.subLocality}, ${place.locality}, ${place.country}.";
+      if (!mounted) return;
       setState(() {
         _lastAddress = fullAddress;
         _lastMapPosition = position; // Update posisi terakhir peta

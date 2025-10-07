@@ -45,7 +45,10 @@ class _StaticMapState extends State<StaticMap> {
       Future.delayed(const Duration(milliseconds: 400)).then((_) {
         if (!_mapReady) {
           _mapReady = true;
-          if (widget.onMapReady != null) widget.onMapReady!();
+          // Ensure the state is still mounted before invoking callbacks
+          if (mounted) {
+            if (widget.onMapReady != null) widget.onMapReady!();
+          }
         }
       });
     }
@@ -84,6 +87,8 @@ class _StaticMapState extends State<StaticMap> {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
+    // Guard against calling setState after dispose
+    if (!mounted) return;
     setState(() {
       _currentLocation = LatLng(position.latitude, position.longitude);
     });
@@ -96,6 +101,8 @@ class _StaticMapState extends State<StaticMap> {
       print('Current Location: $_currentLocation');
       print('Destination Location: ${widget.location}');
 
+      // Guard against calling setState after dispose
+      if (!mounted) return;
       setState(() {
         _polylinePoints = [_currentLocation!, widget.location];
       });
@@ -208,6 +215,7 @@ class _StaticMapState extends State<StaticMap> {
             child: Column(
               children: [
                 FloatingActionButton(
+                  heroTag: null,
                   onPressed: _drawRoute,
                   child: Icon(Icons.directions),
                   backgroundColor: Colors.white,
@@ -215,6 +223,7 @@ class _StaticMapState extends State<StaticMap> {
                 ),
                 SizedBox(height: 10),
                 FloatingActionButton(
+                  heroTag: null,
                   onPressed: _centerMapToMarker,
                   child: Icon(Icons.location_pin),
                   backgroundColor: Colors.white,

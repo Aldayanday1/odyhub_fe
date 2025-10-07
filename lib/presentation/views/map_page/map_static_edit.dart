@@ -51,6 +51,8 @@ class _StaticMapEditState extends State<StaticMapEdit> {
       String fullAddress =
           "${place.subLocality}, ${place.locality}, ${place.country}";
       widget.onLocationChanged(position, fullAddress);
+      // Guard against calling setState after dispose
+      if (!mounted) return;
       setState(() {
         _currentLocation = position;
       });
