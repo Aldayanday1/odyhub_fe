@@ -27,22 +27,16 @@ class _FloatingButtonState extends State<FloatingButton> {
   final UserController userController = UserController();
 
   Future<void> _onItemTapped(int index) async {
-    // Jika user tap tab yang sama dengan halaman aktif, tidak perlu navigasi
-    if (widget.currentIndex == index) {
-      return;
-    }
+    if (widget.currentIndex == index) return;
 
-    // Special case: Logout
     if (index == 1) {
       _showLogoutConfirmationDialog();
       return;
     }
 
-    // If callback is provided (from MainNavigationScreen), use it
     if (widget.onNavigationChanged != null) {
       widget.onNavigationChanged!(index);
     } else {
-      // Fallback: Legacy navigation for standalone usage
       _navigateToPage(index);
     }
   }
@@ -73,7 +67,6 @@ class _FloatingButtonState extends State<FloatingButton> {
     );
   }
 
-  // Method to show the logout confirmation dialog
   void _showLogoutConfirmationDialog() async {
     bool? confirm = await ModernConfirmDialog.show(
       context: context,
@@ -84,65 +77,61 @@ class _FloatingButtonState extends State<FloatingButton> {
     );
 
     if (confirm == true) {
-      _logout(); // Call the logout method
+      _logout();
     }
   }
 
-  // Method to handle logout
   Future<void> _logout() async {
     try {
       await userController.logout();
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
-        // Menghapus semua route dari stack
-        (Route<dynamic> route) => false,
+        (route) => false,
       );
     } catch (e) {
-      // Handle logout error
-      print('Error during logout: $e');
-      ModernSnackBar.showError(
-        context,
-        'Logout failed: $e',
-      );
+      ModernSnackBar.showError(context, 'Logout failed: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(55.0, 0.0, 25.0, 6.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(26.0),
-              child: BackdropFilter(
-                filter: ui.ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
-                child: Container(
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.62),
-                    borderRadius: BorderRadius.circular(26.0),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.35),
-                      width: 1.0,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
+    return Align(
+      alignment: Alignment.bottomCenter, // nempel di bawah layar
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom, // safe area aware
+        ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Navigation bar container
+            Container(
+              height: 72,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.68),
+                borderRadius: BorderRadius.circular(26.0),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.35),
+                  width: 1.0,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 16,
+                    offset: const Offset(0, -4),
                   ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(26.0),
+                child: BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
+                    children: [
                       IconButton(
                         icon: const Icon(Icons.home_outlined),
                         color: widget.currentIndex == 0
@@ -155,7 +144,7 @@ class _FloatingButtonState extends State<FloatingButton> {
                         color: const Color(0xFF9AA0A6),
                         onPressed: () => _onItemTapped(1),
                       ),
-                      const SizedBox(width: 60),
+                      const SizedBox(width: 60), // space for the fab
                       IconButton(
                         icon: const Icon(Icons.notes_outlined),
                         color: widget.currentIndex == 3
@@ -175,45 +164,48 @@ class _FloatingButtonState extends State<FloatingButton> {
                 ),
               ),
             ),
-          ),
-        ),
-        Positioned(
-          bottom: 8, // Adjust the position of the floating action button
-          left: 30,
-          right: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                onPressed: () => _onItemTapped(2),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                highlightElevation: 0,
-                child: Container(
-                  width: 30.0,
-                  height: 30.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF6366F1).withOpacity(0.18),
-                        blurRadius: 14,
-                        offset: const Offset(0, 6),
+
+            // Floating action button (tengah)
+            Positioned(
+              bottom: 8, // Adjust the position of the floating action button
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton(
+                    onPressed: () => _onItemTapped(2),
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    highlightElevation: 0,
+                    child: Container(
+                      width: 30.0,
+                      height: 30.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF6366F1).withOpacity(0.18),
+                            blurRadius: 14,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                    ],
+                      child:
+                          const Icon(Icons.add, color: Colors.white, size: 28),
+                    ),
                   ),
-                  child: const Icon(Icons.add, color: Colors.white, size: 28),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

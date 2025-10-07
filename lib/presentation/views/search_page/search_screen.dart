@@ -83,88 +83,182 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // translucent appbar so content sits under the gradient
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: Text('Pencarian'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text('Pencarian', style: TextStyle(letterSpacing: 0.2)),
+        centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 90,
-            padding: EdgeInsets.all(20),
-            child: TextField(
-              focusNode: _searchFocusNode,
-              controller: _searchController,
-              onChanged: (query) {
-                setState(() {
-                  _performSearch(query);
-                });
-              },
-              onSubmitted: (query) {
-                _performSearch(query);
-              },
-              decoration: InputDecoration(
-                prefixIconColor: Colors.amber,
-                suffixIcon: Icon(Icons.search),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-                hintText: 'Cari...',
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 136, 136, 136),
-                    width: 1.0,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide:
-                        BorderSide(color: Color.fromARGB(255, 136, 136, 136))),
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFf6f8ff),
+              Color(0xFFfafbff),
+            ],
           ),
-          Flexible(
-            child: _searchResult.isNotEmpty
-                ? ListView.builder(
-                    itemCount: _searchResult.length,
-                    itemBuilder: (context, index) {
-                      Pengaduan pengaduan = _searchResult[index];
-                      return InkWell(
-                        onTap: () {
-                          _addToSearchHistory(pengaduan);
-                          _navigateToDetailPage(pengaduan);
-                        },
-                        child: ListTile(
-                          title: Text(
-                            pengaduan.judul,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
-                            pengaduan.alamat,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              pengaduan.gambar,
-                              width: 50.0,
-                              height: 50.0,
-                              fit: BoxFit.cover,
-                            ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+            child: Column(
+              children: [
+                // modern glass-like search bar
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 18,
+                        offset: Offset(0, 8),
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 8),
+                      Icon(Icons.search, color: Color(0xFF6366F1)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          focusNode: _searchFocusNode,
+                          controller: _searchController,
+                          onChanged: (query) => _performSearch(query),
+                          onSubmitted: (query) => _performSearch(query),
+                          style: TextStyle(fontSize: 15),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(vertical: 8),
+                            hintText:
+                                'Cari laporan, lokasi, atau kata kunci...',
+                            border: InputBorder.none,
                           ),
                         ),
-                      );
-                    },
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildSearchHistory(),
-                    ),
+                      ),
+                      if (_searchController.text.isNotEmpty)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _searchController.clear();
+                              _searchResult.clear();
+                            });
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(Icons.close, color: Colors.grey[600]),
+                          ),
+                        ),
+                      const SizedBox(width: 6),
+                      ElevatedButton(
+                        onPressed: () => _performSearch(_searchController.text),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF6366F1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 6,
+                        ),
+                        child: Icon(Icons.arrow_forward, color: Colors.white),
+                      ),
+                    ],
                   ),
+                ),
+
+                const SizedBox(height: 18),
+
+                // content area
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: _searchResult.isNotEmpty
+                        ? ListView.separated(
+                            key: const ValueKey('results'),
+                            itemCount: _searchResult.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final pengaduan = _searchResult[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  _addToSearchHistory(pengaduan);
+                                  _navigateToDetailPage(pengaduan);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(14),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.04),
+                                        blurRadius: 12,
+                                        offset: Offset(0, 6),
+                                      )
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    leading: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.network(
+                                        pengaduan.gambar,
+                                        width: 64,
+                                        height: 64,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) => Container(
+                                          width: 64,
+                                          height: 64,
+                                          color: Colors.grey[200],
+                                          child: Icon(Icons.image_not_supported,
+                                              color: Colors.grey[400]),
+                                        ),
+                                      ),
+                                    ),
+                                    title: Text(
+                                      pengaduan.judul,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(top: 6.0),
+                                      child: Text(
+                                        pengaduan.alamat,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.grey[600]),
+                                      ),
+                                    ),
+                                    trailing: Icon(Icons.chevron_right,
+                                        color: Colors.grey[500]),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : SingleChildScrollView(
+                            key: const ValueKey('history'),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: _buildSearchHistory(),
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

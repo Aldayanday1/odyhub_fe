@@ -21,8 +21,15 @@ class _AutoSlideCardsState extends State<AutoSlideCards> {
   @override
   void initState() {
     super.initState();
+    // Start at second card (index 1) if list has at least 2 items
+    final initialPage = widget.pengaduanList.length >= 2 ? 1 : 0;
+    _currentPage = initialPage;
+
     // Slightly smaller fraction so adjacent cards sit closer to the center
-    _pageController = PageController(viewportFraction: 0.78);
+    _pageController = PageController(
+      viewportFraction: 0.78,
+      initialPage: initialPage,
+    );
 
     _timer = Timer.periodic(Duration(seconds: 3), (timer) {
       // Jika halaman saat ini belum mencapai halaman terakhir, geser ke halaman berikutnya

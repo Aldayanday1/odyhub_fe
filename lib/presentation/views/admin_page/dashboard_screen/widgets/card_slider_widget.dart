@@ -20,7 +20,14 @@ class _AutoSlideCardsState extends State<AutoSlideCardsAdmin> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.8);
+    // Start at second card (index 1) if list has at least 2 items
+    final initialPage = widget.pengaduanList.length >= 2 ? 1 : 0;
+    _currentPage = initialPage;
+
+    _pageController = PageController(
+      viewportFraction: 0.8,
+      initialPage: initialPage,
+    );
 
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       // Jika halaman saat ini belum mencapai halaman terakhir, geser ke halaman berikutnya

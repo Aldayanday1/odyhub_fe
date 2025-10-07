@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sistem_pengaduan/domain/model/pengaduan.dart';
 import 'package:sistem_pengaduan/presentation/controllers/pengaduan_controller.dart';
 import 'package:sistem_pengaduan/presentation/views/auth_pages/login_user_page/login_page.dart';
-import 'package:sistem_pengaduan/presentation/views/home_page/home_screen.dart';
+import 'package:sistem_pengaduan/presentation/views/main_navigation/main_navigation_screen.dart';
 import 'package:sistem_pengaduan/presentation/views/map_page/map_static_edit.dart';
 import 'package:sistem_pengaduan/presentation/views/widgets/modern_snackbar.dart';
 
@@ -135,8 +135,39 @@ class _EditPengaduanState extends State<EditPengaduan> {
   //---------- UPDATE PENGADUAN ---------
 
   Future<void> _updatePengaduan() async {
-    if (_formKey.currentState?.validate() == true) {
-      // Cek apakah ada perubahan sebelum mengirim pembaruan
+    print('🔵 DEBUG: Button pressed, _updatePengaduan called');
+
+    // Validasi kategori
+    if (selectedKategori == null) {
+      print('🔴 DEBUG: selectedKategori is null');
+      ModernSnackBar.showError(context, 'Silakan pilih kategori pengaduan.');
+      return;
+    }
+    print('✅ DEBUG: selectedKategori: ${selectedKategori!.displayName}');
+
+    // Validasi lokasi
+    if (_alamat == null || _selectedLocation == null) {
+      print(
+          '🔴 DEBUG: Location invalid - alamat: $_alamat, location: $_selectedLocation');
+      ModernSnackBar.showError(
+          context, 'Silakan pilih lokasi kejadian di peta.');
+      return;
+    }
+    print('✅ DEBUG: Location valid - alamat: $_alamat');
+
+    // Validasi form (skip jika tidak ada Form widget)
+    bool formIsValid = _formKey.currentState?.validate() ?? true;
+    print('🔵 DEBUG: Form validation: $formIsValid');
+
+    if (!formIsValid) {
+      print('🔴 DEBUG: Form validation failed');
+      ModernSnackBar.showError(
+          context, 'Mohon lengkapi semua field yang diperlukan.');
+      return;
+    }
+
+    try {
+      // Cek apakah ada perubahan
       bool isImageChanged =
           _image != null && _image!.path != widget.pengaduan.gambar;
       bool isDataChanged = _judul.text != widget.pengaduan.judul ||
@@ -146,24 +177,28 @@ class _EditPengaduanState extends State<EditPengaduan> {
           _selectedLocation?.latitude != widget.pengaduan.latitude ||
           _selectedLocation?.longitude != widget.pengaduan.longitude;
 
+      print(
+          '🔵 DEBUG: isImageChanged: $isImageChanged, isDataChanged: $isDataChanged');
+
       if (!isImageChanged && !isDataChanged) {
+        print('⚠️ DEBUG: No changes detected');
         ModernSnackBar.showWarning(
-          context,
-          'Tidak ada perubahan yang dilakukan.',
-        );
+            context, 'Tidak ada perubahan yang dilakukan.');
         return;
       }
 
       DateTime now = DateTime.now();
 
+      // IMPORTANT: Don't send empty string for gambar if image not changed!
+      // Use original image path instead
       var pengaduan = Pengaduan(
         id: _idPengaduan,
         judul: _judul.text,
         deskripsi: _deskripsi.text,
         alamat: _alamat!,
-        latitude: _selectedLocation?.latitude ?? 0.0,
-        longitude: _selectedLocation?.longitude ?? 0.0,
-        gambar: isImageChanged ? _image!.path : '',
+        latitude: _selectedLocation!.latitude,
+        longitude: _selectedLocation!.longitude,
+        gambar: widget.pengaduan.gambar, // Keep original path
         kategori: selectedKategori!,
         createdAt: widget.pengaduan.createdAt,
         updatedAt: now,
@@ -174,47 +209,49 @@ class _EditPengaduanState extends State<EditPengaduan> {
         gambarTanggapan: '',
       );
 
+      print('🔵 DEBUG: Sending update request...');
+      print('🔵 DEBUG: Pengaduan ID: ${pengaduan.id}');
+      print('🔵 DEBUG: Judul: ${pengaduan.judul}');
+      print('🔵 DEBUG: Sending image file: ${isImageChanged ? "YES" : "NO"}');
+
       var result = await PengaduanController().updatePengaduan(
         pengaduan,
         isImageChanged ? _image : null,
       );
 
+      print('🔵 DEBUG: Response received');
+      print('🔵 DEBUG: Success: ${result['success']}');
+      print('🔵 DEBUG: Message: ${result['message']}');
+
       if (result['success']) {
+        print('✅ DEBUG: Update successful, navigating to home...');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeView(),
+            builder: (context) => MainNavigationScreen(initialIndex: 0),
+            settings: RouteSettings(arguments: result['message']),
           ),
-        ).then((_) {
-          Future.delayed(const Duration(milliseconds: 100), () {
-            if (context.mounted) {
-              ModernSnackBar.showSuccess(
-                context,
-                result['message'],
-              );
-            }
-          });
-        });
-
-        // ------- BREAK SESSION -------
+        );
       } else if (result['message'] ==
           'Token tidak valid. Silakan login kembali.') {
+        print('🔴 DEBUG: Token invalid, redirecting to login...');
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => LoginPage(),
             settings: RouteSettings(
-              arguments: 'Session habis, silakan login kembali',
-            ),
+                arguments: 'Session habis, silakan login kembali'),
           ),
           (Route<dynamic> route) => false,
         );
       } else {
-        ModernSnackBar.showError(
-          context,
-          result['message'],
-        );
+        print('🔴 DEBUG: Update failed: ${result['message']}');
+        ModernSnackBar.showError(context, result['message']);
       }
+    } catch (e, stackTrace) {
+      print('❌ DEBUG: Exception occurred: $e');
+      print('❌ DEBUG: Stack trace: $stackTrace');
+      ModernSnackBar.showError(context, 'Terjadi kesalahan: ${e.toString()}');
     }
   }
 

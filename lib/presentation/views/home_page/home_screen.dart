@@ -160,218 +160,215 @@ class _HomeViewState extends State<HomeView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ------------------- MODERN HEADER CARD -------------------
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white,
-                            const Color(0xFFF8F9FF),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color(0xFF6366F1).withOpacity(0.1),
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 20,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(20),
-                      margin: const EdgeInsets.only(bottom: kVerticalSmall),
-
-                      // ------------------- USER PROFILE -------------------
-
-                      child: FutureBuilder<UserProfile?>(
-                        future: _userProfileFuture,
-                        builder: (context, snapshot) {
-                          // memperbarui tampilan sesuai dengan status
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SkeletonProfileHeader();
-                          } else if (snapshot.hasError) {
-                            // -------BREAK SESSION-------
-                            // Jika error karena token tidak valid, arahkan ke halaman login
-                            if (snapshot.error
-                                .toString()
-                                .contains('Token tidak valid')) {
-                              Future.microtask(
-                                () {
-                                  _showSnackBar(
-                                      'Session habis, silakan login kembali');
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                },
+                    // ------------------- TOP BAR (menu/title/avatar) -------------------
+                    FutureBuilder<UserProfile?>(
+                      future: _userProfileFuture,
+                      builder: (context, snapshot) {
+                        // While waiting, show a small skeleton for the header
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SkeletonProfileHeader();
+                        } else if (snapshot.hasError) {
+                          // Handle token invalid -> force login
+                          if (snapshot.error
+                              .toString()
+                              .contains('Token tidak valid')) {
+                            Future.microtask(() {
+                              _showSnackBar(
+                                  'Session habis, silakan login kembali');
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                                (Route<dynamic> route) => false,
                               );
-                              return SizedBox
-                                  .shrink(); // Mengembalikan widget kosong sementara
-                            }
-                            return Center(
-                                child: Text('Error: ${snapshot.error}'));
-                          } else if (snapshot.hasData) {
-                            UserProfile userProfile = snapshot.data!;
-                            return Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: widget.onMenuTap,
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.06),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Image.asset(
-                                            'assets/menu_bar.png',
-                                            width: 20,
-                                            height: 20,
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Home Page",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 18,
-                                        color: const Color(0xFF1A1A1A),
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UserProfilePage(),
-                                              ),
-                                            );
-                                          },
-                                          borderRadius:
-                                              BorderRadius.circular(24),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.white,
-                                                width: 3,
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.12),
-                                                  blurRadius: 12,
-                                                  offset: const Offset(0, 4),
-                                                ),
-                                              ],
-                                            ),
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                                  const Color(0xFFE8EAED),
-                                              backgroundImage: NetworkImage(
-                                                userProfile.profileImage,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-
-                                // Modern Search - pure white (no gray wrapper)
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: const SearchWidget(),
-                                ),
-
-                                const SizedBox(height: 24),
-
-                                // Welcome message with gradient accent
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 4,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color(0xFF6366F1),
-                                            Color(0xFF8B5CF6)
-                                          ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                        ),
-                                        borderRadius: BorderRadius.circular(2),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Welcome Back",
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 13,
-                                            color: const Color(0xFF6B7280),
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          userProfile.nama,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 16,
-                                            color: const Color(0xFF1A1A1A),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Center(child: Text('No data available'));
+                            });
+                            return const SizedBox.shrink();
                           }
-                        },
-                      ),
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        final UserProfile? userProfile = snapshot.data;
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: widget.onMenuTap,
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.06),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Image.asset(
+                                    'assets/menu_bar.png',
+                                    width: 20,
+                                    height: 20,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "Home Page",
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: const Color(0xFF1A1A1A),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  if (userProfile != null) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UserProfilePage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                                borderRadius: BorderRadius.circular(24),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 3,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.12),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 15,
+                                    backgroundColor: const Color(0xFFE8EAED),
+                                    backgroundImage: NetworkImage(
+                                      userProfile?.profileImage ?? '',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Modern Search - outside of the welcome card
+                    SizedBox(
+                      width: double.infinity,
+                      child: const SearchWidget(),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // ------------------- WELCOME CARD (compact) -------------------
+                    FutureBuilder<UserProfile?>(
+                      future: _userProfileFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SkeletonProfileHeader();
+                        } else if (snapshot.hasError) {
+                          return const SizedBox.shrink();
+                        } else if (!snapshot.hasData) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final userProfile = snapshot.data!;
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white,
+                                const Color(0xFFF8F9FF),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFF6366F1).withOpacity(0.1),
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 20,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(bottom: kVerticalSmall),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 4,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFF6366F1),
+                                      Color(0xFF8B5CF6)
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Welcome Back",
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 13,
+                                      color: const Color(0xFF6B7280),
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    userProfile.nama,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: const Color(0xFF1A1A1A),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
 
                     // ---------------------- SLIDE CARDS ----------------------
