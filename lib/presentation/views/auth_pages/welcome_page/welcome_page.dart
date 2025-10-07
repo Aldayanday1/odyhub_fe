@@ -149,126 +149,157 @@ class _WelcomePageState extends State<WelcomePage>
             child: Column(
               children: [
                 // subtle header row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (c) => LoginPage()));
-                        },
-                        child: Text(
-                          'Sign in',
-                          style: GoogleFonts.roboto(
-                              color: const Color(0xFF6B7280)),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Hero(
-                            tag: 'app_logo',
-                            child: Image.asset(
-                              'assets/ody2.png',
-                              width: 106,
-                              height: 106,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-                          Text(
-                            'Welcome to',
-                            style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: const Color(0xFF6B7280),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          ShaderMask(
-                            shaderCallback: (bounds) => const LinearGradient(
-                              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                            ).createShader(bounds),
-                            child: Text(
-                              'OdyHub',
-                              style: GoogleFonts.poppins(
-                                fontSize: 36,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 36.0),
-                            child: Text(
-                              'Public service enhancement reporting — report, track and collaborate',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                color: const Color(0xFF6B7280),
-                                height: 1.4,
-                              ),
-                            ),
-                          ),
-                        ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (c) => LoginPage()));
+                      },
+                      child: Text(
+                        'Sign in',
+                        style:
+                            GoogleFonts.roboto(color: const Color(0xFF6B7280)),
                       ),
                     ),
-                  ),
+                  ],
+                ),
 
-                  // CTA
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 28.0),
-                    child: Row(
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Container(
-                            height: 54,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                              ),
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xFF6366F1).withOpacity(0.35),
-                                  blurRadius: 12,
-                                  offset: Offset(0, 6),
-                                ),
-                                BoxShadow(
-                                  color: Color(0xFF8B5CF6).withOpacity(0.18),
-                                  blurRadius: 8,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
+                        Hero(
+                          tag: 'app_logo',
+                          child: Image.asset(
+                            'assets/ody2.png',
+                            width: 106,
+                            height: 106,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        Text(
+                          'Welcome to',
+                          style: GoogleFonts.roboto(
+                            fontSize: 16,
+                            color: const Color(0xFF6B7280),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                          ).createShader(bounds),
+                          child: Text(
+                            'OdyHub',
+                            style: GoogleFonts.poppins(
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (c) => LoginPage()),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                padding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 36.0),
+                          child: Text(
+                            'Public service enhancement reporting — report, track and collaborate',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              color: const Color(0xFF6B7280),
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // CTA
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 28.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 54,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                            ),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFF6366F1).withOpacity(0.35),
+                                blurRadius: 12,
+                                offset: Offset(0, 6),
                               ),
-                              child: Center(
+                              BoxShadow(
+                                color: Color(0xFF8B5CF6).withOpacity(0.18),
+                                blurRadius: 8,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (c) => LoginPage()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Get Started',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: BackdropFilter(
+                            filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
+                              height: 52,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.75),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                    color: Colors.white.withOpacity(0.6)),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (c) => AdminLoginPage()),
+                                  );
+                                },
                                 child: Text(
-                                  'Get Started',
+                                  'Admin',
                                   style: GoogleFonts.poppins(
-                                    color: Colors.white,
-                                    fontSize: 16,
+                                    color: const Color(0xFF6366F1),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -276,47 +307,13 @@ class _WelcomePageState extends State<WelcomePage>
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: BackdropFilter(
-                              filter:
-                                  ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Container(
-                                height: 52,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.75),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                      color: Colors.white.withOpacity(0.6)),
-                                ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (c) => AdminLoginPage()),
-                                    );
-                                  },
-                                  child: Text(
-                                    'Admin',
-                                    style: GoogleFonts.poppins(
-                                      color: const Color(0xFF6366F1),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
         ],
       ),
     );

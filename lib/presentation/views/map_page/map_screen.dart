@@ -382,8 +382,8 @@ class _MapScreenState extends State<MapScreen>
               children: [
                 Container(
                   margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -392,163 +392,163 @@ class _MapScreenState extends State<MapScreen>
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => Navigator.of(context).pop(),
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3F4F6),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.arrow_back_ios_new_rounded,
-                                size: 18,
-                                color: Color(0xFF2D3748),
-                              ),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => Navigator.of(context).pop(),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3F4F6),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              size: 18,
+                              color: Color(0xFF2D3748),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            onChanged: _searchLocation,
-                            decoration: InputDecoration(
-                              hintText: 'Cari lokasi...',
-                              hintStyle: GoogleFonts.roboto(
-                                fontSize: 14,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: _searchLocation,
+                          decoration: InputDecoration(
+                            hintText: 'Cari lokasi...',
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 8,
+                            ),
+                          ),
+                          style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            color: const Color(0xFF2D3748),
+                          ),
+                        ),
+                      ),
+                      if (_searchController.text.isNotEmpty)
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              _searchController.clear();
+                              setState(() {
+                                _searchResults = [];
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.clear_rounded,
+                                size: 18,
                                 color: Colors.grey[600],
                               ),
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 8,
-                              ),
-                            ),
-                            style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              color: const Color(0xFF2D3748),
                             ),
                           ),
                         ),
-                        if (_searchController.text.isNotEmpty)
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                _searchController.clear();
-                                setState(() {
-                                  _searchResults = [];
-                                });
-                              },
+                      const SizedBox(width: 4),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: _getCurrentLocation,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF6366F1).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                child: Icon(
-                                  Icons.clear_rounded,
-                                  size: 18,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
+                            ),
+                            child: const Icon(
+                              Icons.my_location_rounded,
+                              size: 20,
+                              color: Color(0xFF6366F1),
                             ),
                           ),
-                        const SizedBox(width: 4),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: _getCurrentLocation,
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF6366F1).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.my_location_rounded,
-                                size: 20,
-                                color: Color(0xFF6366F1),
-                              ),
-                            ),
-                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Search results dropdown
+                if (_searchResults.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    constraints: const BoxConstraints(maxHeight: 200),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                  ),
-
-                  // Search results dropdown
-                  if (_searchResults.isNotEmpty)
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      constraints: const BoxConstraints(maxHeight: 200),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      itemCount: _searchResults.length,
+                      separatorBuilder: (context, index) => Divider(
+                        height: 1,
+                        color: Colors.grey[200],
                       ),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        itemCount: _searchResults.length,
-                        separatorBuilder: (context, index) => Divider(
-                          height: 1,
-                          color: Colors.grey[200],
-                        ),
-                        itemBuilder: (context, index) {
-                          final item = _searchResults[index];
-                          final label = item['label'] as String? ?? '';
-                          return Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => _selectSearchResult(item),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      color: const Color(0xFF6366F1),
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        label,
-                                        style: GoogleFonts.roboto(
-                                          fontSize: 13,
-                                          color: const Color(0xFF2D3748),
-                                        ),
+                      itemBuilder: (context, index) {
+                        final item = _searchResults[index];
+                        final label = item['label'] as String? ?? '';
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _selectSearchResult(item),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    color: const Color(0xFF6366F1),
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      label,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 13,
+                                        color: const Color(0xFF2D3748),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
+          ),
 
           // Bottom sheet with address and confirm button
           Positioned(
