@@ -323,8 +323,8 @@ class _EditPengaduanState extends State<EditPengaduan> {
 
                 // Back button (lighter, sits above image)
                 Positioned(
-                  top: 14,
-                  left: 14,
+                  top: 70,
+                  left: 20,
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
