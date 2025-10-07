@@ -214,12 +214,12 @@ class _DetailViewState extends State<DetailView> {
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 0),
 
             // CONTENT
             Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: kHorizontalPadding, vertical: 15),
+                  horizontal: kHorizontalPadding, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
